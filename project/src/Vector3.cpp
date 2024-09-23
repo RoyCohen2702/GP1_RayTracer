@@ -58,7 +58,6 @@ namespace dae {
 		//dotResult = Vector3::Dot(Vector3::UnitX, -Vector3::UnitX); //(-1) Same direction
 		//dotResult = Vector3::Dot(Vector3::UnitX, Vector3::UnitY); //(1) Same direction
 
-		//testerino testerano 
 
 
 	}
