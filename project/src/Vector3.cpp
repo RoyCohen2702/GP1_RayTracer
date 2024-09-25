@@ -49,28 +49,23 @@ namespace dae {
 
 	float Vector3::Dot(const Vector3& v1, const Vector3& v2)
 	{
-		//todo W1
-		throw std::runtime_error("Not Implemented Yet");
-		return {};
+		////todo W1
+		//throw std::runtime_error("Not Implemented Yet");
+		//return {};
 
-		//float dotResult{};
-		//dotResult = Vector3::Dot(Vector3::UnitX, Vector3::UnitX); //(1) Same direction
-		//dotResult = Vector3::Dot(Vector3::UnitX, -Vector3::UnitX); //(-1) Same direction
-		//dotResult = Vector3::Dot(Vector3::UnitX, Vector3::UnitY); //(1) Same direction
-
-
-
+		return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 	}
 
 	Vector3 Vector3::Cross(const Vector3& v1, const Vector3& v2)
 	{
-		//todo W1
-		throw std::runtime_error("Not Implemented Yet");
-		return {};
+		////todo W1
+		//throw std::runtime_error("Not Implemented Yet");
+		//return {};
 
-		//Vector3 crossResult{}; //Left handed
-		//crossResult = Vector3::Cross(Vector3::UnitZ, Vector3::UnitX); //(0, 1, 0) UnitY
-		//crossResult = Vector3::Cross(Vector3::UnitX, Vector3::UnitZ); //(0, -1, 0) UnitY
+		return Vector3(
+			v1.y * v2.z - v1.z * v2.y,
+			v1.z * v2.x - v1.x * v2.z,
+			v1.x * v2.y - v1.y * v2.x);
 	}
 
 	Vector3 Vector3::Project(const Vector3& v1, const Vector3& v2)

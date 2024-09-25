@@ -11,9 +11,11 @@ namespace dae
 		//SPHERE HIT-TESTS
 		inline bool HitTest_Sphere(const Sphere& sphere, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 		{
-			//todo W1
+			//TODO W1
 			throw std::runtime_error("Not Implemented Yet");
 			return false;
+
+
 		}
 
 		inline bool HitTest_Sphere(const Sphere& sphere, const Ray& ray)
@@ -26,7 +28,7 @@ namespace dae
 		//PLANE HIT-TESTS
 		inline bool HitTest_Plane(const Plane& plane, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 		{
-			//todo W1
+			//TODO W1
 			throw std::runtime_error("Not Implemented Yet");
 			return false;
 		}

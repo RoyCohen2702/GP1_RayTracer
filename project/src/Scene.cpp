@@ -28,8 +28,10 @@ namespace dae {
 
 	void dae::Scene::GetClosestHit(const Ray& ray, HitRecord& closestHit) const
 	{
-		//todo W1
-		throw std::runtime_error("Not Implemented Yet");
+		////todo W1
+		//throw std::runtime_error("Not Implemented Yet");
+
+		
 	}
 
 	bool Scene::DoesHit(const Ray& ray) const
@@ -125,6 +127,8 @@ namespace dae {
 		AddPlane({ 0.f, -75.f, 0.f }, { 0.f, 1.f,0.f }, matId_Solid_Yellow);
 		AddPlane({ 0.f, 75.f, 0.f }, { 0.f, -1.f,0.f }, matId_Solid_Yellow);
 		AddPlane({ 0.f, 0.f, 125.f }, { 0.f, 0.f,-1.f }, matId_Solid_Magenta);
+
+		
 	}
 #pragma endregion
 }
