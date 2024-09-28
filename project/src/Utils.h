@@ -3,6 +3,8 @@
 #include "Maths.h"
 #include "DataTypes.h"
 
+#include <iostream>
+
 namespace dae
 {
 	namespace GeometryUtils
@@ -11,11 +13,39 @@ namespace dae
 		//SPHERE HIT-TESTS
 		inline bool HitTest_Sphere(const Sphere& sphere, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 		{
-			//TODO W1
-			throw std::runtime_error("Not Implemented Yet");
+			////TODO W1
+			//throw std::runtime_error("Not Implemented Yet");
+			//return false;
+			
+			// discriminant = b^2 - 4ac
+			// D > 0 -> intersecting on 2 points
+			// D = 0 -> intersecting on one point
+			// D < 0 -> not intersecting
+
+			const Vector3 RayToSphere{ ray.origin - sphere.origin };
+
+			const float a{ Vector3::Dot(ray.direction, ray.direction) };
+			const float b{ 2.f * Vector3::Dot(ray.direction, RayToSphere) };
+			const float c{ Vector3::Dot(RayToSphere,RayToSphere) - pow(sphere.radius, 2.f)};
+			
+			const float discriminant{ pow(b, 2.f) - 4.f * a * c };
+			
+			if (discriminant > 0)
+			{
+				const float t = (-b - sqrt(discriminant)) / (2.f * a);
+				
+				//if (t < ray.max && t > ray.min) {
+					if (t < hitRecord.t) {
+						hitRecord.t = t;
+						hitRecord.origin = ray.origin + ray.direction * hitRecord.t;
+						hitRecord.normal = (hitRecord.origin - sphere.origin) / sphere.radius;
+						hitRecord.didHit = true;
+						hitRecord.materialIndex = sphere.materialIndex;
+						return true;
+					}
+				//}
+			}
 			return false;
-
-
 		}
 
 		inline bool HitTest_Sphere(const Sphere& sphere, const Ray& ray)
@@ -28,8 +58,26 @@ namespace dae
 		//PLANE HIT-TESTS
 		inline bool HitTest_Plane(const Plane& plane, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 		{
-			//TODO W1
-			throw std::runtime_error("Not Implemented Yet");
+			////TODO W1
+			//throw std::runtime_error("Not Implemented Yet");
+			//return false;
+
+			const Vector3 RayToOrigin{ plane.origin - ray.origin };
+
+			const float t{ 
+				(Vector3::Dot(RayToOrigin, plane.normal)) / 
+				(Vector3::Dot(ray.direction, plane.normal)) };
+
+			if (t < ray.max && t > ray.min) {
+				if (t < hitRecord.t) {
+					hitRecord.t = t;
+					hitRecord.origin = ray.origin + ray.direction * hitRecord.t;
+					hitRecord.normal = plane.normal;
+					hitRecord.didHit = true;
+					hitRecord.materialIndex = plane.materialIndex;
+					return true;
+				}
+			}
 			return false;
 		}
 

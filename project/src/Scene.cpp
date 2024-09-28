@@ -30,8 +30,14 @@ namespace dae {
 	{
 		////todo W1
 		//throw std::runtime_error("Not Implemented Yet");
-
 		
+		for (uint16_t i{}; i < m_PlaneGeometries.size(); ++i) {
+			GeometryUtils::HitTest_Plane(m_PlaneGeometries[i], ray, closestHit);
+		}
+
+		for (uint16_t i{}; i < m_SphereGeometries.size(); ++i) {
+			GeometryUtils::HitTest_Sphere(m_SphereGeometries[i], ray, closestHit);
+		}
 	}
 
 	bool Scene::DoesHit(const Ray& ray) const
@@ -127,8 +133,6 @@ namespace dae {
 		AddPlane({ 0.f, -75.f, 0.f }, { 0.f, 1.f,0.f }, matId_Solid_Yellow);
 		AddPlane({ 0.f, 75.f, 0.f }, { 0.f, -1.f,0.f }, matId_Solid_Yellow);
 		AddPlane({ 0.f, 0.f, 125.f }, { 0.f, 0.f,-1.f }, matId_Solid_Magenta);
-
-		
 	}
 #pragma endregion
 }
