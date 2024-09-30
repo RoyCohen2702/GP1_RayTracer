@@ -29,8 +29,12 @@ void Renderer::Render(Scene* pScene) const
 
 	Vector3 rayDirection{};
 
+	Matrix cameraToWorld = camera.CalculateCameraToWorld();
+
 	for (int px{}; px < m_Width; ++px)
 	{
+		const float aspectRatio{ float(m_Width) / float(m_Height) };
+		const float radFOV{ camera.fovAngle * PI / 180.f };
 		for (int py{}; py < m_Height; ++py)
 		{
 			//BLACK GRADIENT BACKGROUND
@@ -45,15 +49,22 @@ void Renderer::Render(Scene* pScene) const
 			//Calculate ray for each pixel on the screen w1
 			// 
 			// 1: calculate aspectratio -> screenwidth / screenheight
-			const float aspectRatio{ float(m_Width)/ float(m_Height) };
+			
+			// Convert angle to radians
+			
+			// calculate FOV with radians NOT ANGLE
+			const float FOV{ tan(radFOV / 2) };
 
 			// 2: store coordinates of pixels by using NDC
-			rayDirection.x = ((2.f * (float(px) + 0.5f)/float(m_Width)) - 1.f) * aspectRatio;
-			rayDirection.y = (1.f - 2.f * (float(py) + 0.5f)/float(m_Height));
+			rayDirection.x = ((2.f * (float(px) + 0.5f)/float(m_Width)) - 1.f) * aspectRatio * FOV;
+			rayDirection.y = (1.f - 2.f * (float(py) + 0.5f)/float(m_Height)) * FOV;
 			rayDirection.z = 1.f;
 			
 			// 3: normalize ray Direction
 			rayDirection.Normalize();
+			
+			// Transform raydirection with up, forward and right vector
+			rayDirection = cameraToWorld.TransformVector(rayDirection);
 
 			// TEST: test it out
 			// 
@@ -61,7 +72,7 @@ void Renderer::Render(Scene* pScene) const
 			//ColorRGB finalColor{ rayDirection.x, rayDirection.y, rayDirection.z };
 
 			// Ray we are casting from the camera towards each pixel
-			Ray viewRay{ {0,0,0}, rayDirection };
+			Ray viewRay{ camera.origin, rayDirection };
 
 			//color to write to the color buffer (Default = black)
 			ColorRGB finalColor{};
