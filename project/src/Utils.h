@@ -28,22 +28,21 @@ namespace dae
 			const float b{ 2.f * Vector3::Dot(ray.direction, RayToSphere) };
 			const float c{ Vector3::Dot(RayToSphere,RayToSphere) - pow(sphere.radius, 2.f)};
 			
-			const float discriminant{ pow(b, 2.f) - 4.f * a * c };
+			const float discriminant{ Square(b) - 4.f * a * c};
 			
 			if (discriminant > 0)
 			{
+				//todo ppt week 1 ->  p45 t < tmin
 				const float t = (-b - sqrt(discriminant)) / (2.f * a);
 				
-				//if (t < ray.max && t > ray.min) {
-					if (t < hitRecord.t) {
-						hitRecord.t = t;
-						hitRecord.origin = ray.origin + ray.direction * hitRecord.t;
-						hitRecord.normal = (hitRecord.origin - sphere.origin) / sphere.radius;
-						hitRecord.didHit = true;
-						hitRecord.materialIndex = sphere.materialIndex;
-						return true;
-					}
-				//}
+				if (t < ray.max && t > ray.min && t < hitRecord.t) {
+					hitRecord.t = t;
+					hitRecord.origin = ray.origin + ray.direction * hitRecord.t;
+					hitRecord.normal = (hitRecord.origin - sphere.origin) / sphere.radius;
+					hitRecord.didHit = true;
+					hitRecord.materialIndex = sphere.materialIndex;
+					return true;
+				}
 			}
 			return false;
 		}
@@ -68,15 +67,13 @@ namespace dae
 				(Vector3::Dot(RayToOrigin, plane.normal)) / 
 				(Vector3::Dot(ray.direction, plane.normal)) };
 
-			if (t < ray.max && t > ray.min) {
-				if (t < hitRecord.t) {
-					hitRecord.t = t;
-					hitRecord.origin = ray.origin + ray.direction * hitRecord.t;
-					hitRecord.normal = plane.normal;
-					hitRecord.didHit = true;
-					hitRecord.materialIndex = plane.materialIndex;
-					return true;
-				}
+			if (t < ray.max && t > ray.min && t < hitRecord.t) {
+				hitRecord.t = t;
+				hitRecord.origin = ray.origin + ray.direction * hitRecord.t;
+				hitRecord.normal = plane.normal;
+				hitRecord.didHit = true;
+				hitRecord.materialIndex = plane.materialIndex;
+				return true;
 			}
 			return false;
 		}
@@ -123,9 +120,22 @@ namespace dae
 		//Direction from target to light
 		inline Vector3 GetDirectionToLight(const Light& light, const Vector3 origin)
 		{
-			//todo W3
-			throw std::runtime_error("Not Implemented Yet");
-			return {};
+			////todo W3
+			//throw std::runtime_error("Not Implemented Yet");
+			//return {};
+
+			switch (light.type)
+			{
+			case LightType::Point:
+				return light.origin - origin;
+				break;
+			case LightType::Directional:
+				return light.direction;
+				break;
+			default:
+				return{};
+				break;
+			}
 		}
 
 		inline ColorRGB GetRadiance(const Light& light, const Vector3& target)

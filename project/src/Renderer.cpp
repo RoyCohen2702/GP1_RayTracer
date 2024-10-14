@@ -31,10 +31,16 @@ void Renderer::Render(Scene* pScene) const
 
 	Matrix cameraToWorld = camera.CalculateCameraToWorld();
 
+	// Convert angle to radians
+	const float radFOV{ camera.fovAngle * PI / 180.f };
+
+	// calculate FOV with radians NOT ANGLE
+	const float FOV{ tan(radFOV / 2) };
+
 	for (int px{}; px < m_Width; ++px)
 	{
 		const float aspectRatio{ float(m_Width) / float(m_Height) };
-		const float radFOV{ camera.fovAngle * PI / 180.f };
+		
 		for (int py{}; py < m_Height; ++py)
 		{
 			//BLACK GRADIENT BACKGROUND
@@ -45,22 +51,12 @@ void Renderer::Render(Scene* pScene) const
 			//
 			//ColorRGB finalColor{ gradient, gradient, gradient };
 
-
-			//Calculate ray for each pixel on the screen w1
-			// 
-			// 1: calculate aspectratio -> screenwidth / screenheight
-			
-			// Convert angle to radians
-			
-			// calculate FOV with radians NOT ANGLE
-			const float FOV{ tan(radFOV / 2) };
-
-			// 2: store coordinates of pixels by using NDC
+			// store coordinates of pixels by using NDC
 			rayDirection.x = ((2.f * (float(px) + 0.5f)/float(m_Width)) - 1.f) * aspectRatio * FOV;
 			rayDirection.y = (1.f - 2.f * (float(py) + 0.5f)/float(m_Height)) * FOV;
 			rayDirection.z = 1.f;
 			
-			// 3: normalize ray Direction
+			// normalize ray Direction
 			rayDirection.Normalize();
 			
 			// Transform raydirection with up, forward and right vector
@@ -92,8 +88,27 @@ void Renderer::Render(Scene* pScene) const
 			//GeometryUtils::HitTest_Sphere(testSphere, viewRay, closestHit);
 			
 			if (closestHit.didHit) {
+
 				finalColor = materials[closestHit.materialIndex]->Shade();
-				
+
+
+				for (uint16_t i{}; i < lights.size(); ++i) {
+
+					const Vector3 lightDirection{ LightUtils::GetDirectionToLight(lights[i], closestHit.origin) };
+
+					Ray lightRay{
+						closestHit.origin + (closestHit.normal * 0.0001f),
+						lightDirection.Normalized(),
+						0.00001f,
+						lightDirection.Magnitude()
+					};
+
+					if (pScene->DoesHit(lightRay)) {
+						finalColor *= 0.5f;
+					}
+				}
+
+
 				// TEST: Test to see if the t_values are correct
 				// 
 				//const float scaled_t = (closestHit.t / 500.f);
