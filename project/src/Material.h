@@ -113,36 +113,30 @@ namespace dae
 			////todo: W3
 			//throw std::runtime_error("Not Implemented Yet");
 			const Vector3 h{ ((v + l) / (v + l).Magnitude()).Normalized()};
-			\
+			
 			ColorRGB kd{};
-			ColorRGB ks{};
-			ColorRGB f0{};
+			ColorRGB f0{ ColorRGB{0.04f, 0.04f, 0.04f } };
 
-			if (m_Metalness >= 0.99f)
+			if (m_Metalness == 1.f)
 			{
 				f0 = m_Albedo;
-				ks = f0;
 			}
 
+			const ColorRGB F{ BRDF::FresnelFunction_Schlick(h, v, f0) };
 			const float D{ BRDF::NormalDistribution_GGX(hitRecord.normal, h, m_Roughness) };
-			ColorRGB F{ BRDF::FresnelFunction_Schlick(h, v, f0) };
 			const float G{ BRDF::GeometryFunction_Smith(hitRecord.normal, v, l, m_Roughness) };
 
-			if (m_Metalness < 0.001f) {
-				f0 = ColorRGB{0.04f, 0.04f, 0.04f };
+			if (m_Metalness == 0.f) {
 				kd = ColorRGB{ 1.f, 1.f, 1.f } - F;
-				ks = ColorRGB{ 0.04f, 0.04f, 0.04f };
 			}
 
-			
-
 			const ColorRGB specular{ (D * F * G) / (4 * (Vector3::Dot(v, hitRecord.normal) * Vector3::Dot(l, hitRecord.normal))) };
-			const ColorRGB diffuse{ BRDF::Lambert(kd, ks) };
+			const ColorRGB diffuse{ BRDF::Lambert(kd, m_Albedo) };
 
-			//return diffuse + specular;
+			return kd * diffuse + f0 * specular;
 			//return D * colors::White;
-			return F;
-			//return G;
+			//return F;
+			//return G * colors::White;
 		}
 
 	private:

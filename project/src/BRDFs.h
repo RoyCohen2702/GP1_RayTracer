@@ -73,7 +73,8 @@ namespace dae
 		{
 			////todo: W3
 			//throw std::runtime_error("Not Implemented Yet");
-			return Square(Square(roughness)) / (PI * Square(Square(Vector3::Dot(n,h)) * (Square(Square(roughness)) - 1) + 1));
+			float alpha{ Square(roughness) };
+			return Square(alpha) / (PI * Square(Square(Vector3::Dot(n,h)) * (Square(alpha) - 1) + 1));
 		}
 
 
@@ -88,8 +89,8 @@ namespace dae
 		{
 			////todo: W3
 			//throw std::runtime_error("Not Implemented Yet");
-
-			float k{ Square(Square(roughness) + 1) / 8 };
+			float alpha{ Square(roughness) };
+			float k{ Square(alpha + 1) / 8 };
 			return Vector3::Dot(v, n) / (Vector3::Dot(n,v) * ( 1 - k) + k);
 		}
 
@@ -105,7 +106,9 @@ namespace dae
 		{
 			////todo: W3
 			//throw std::runtime_error("Not Implemented Yet");
-			float k{ Square(Square(roughness) + 1) / 8 };
+
+			float alpha{ Square(roughness) };
+			float k{ Square(alpha + 1) / 8 };
 
 			return GeometryFunction_SchlickGGX(n, v, k) * GeometryFunction_SchlickGGX(n, l, k);
 		}
