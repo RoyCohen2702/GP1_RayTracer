@@ -30,7 +30,7 @@ namespace dae {
 	{
 		////todo W1
 		//throw std::runtime_error("Not Implemented Yet");
-		
+
 		for (uint16_t i{}; i < m_PlaneGeometries.size(); ++i) {
 			GeometryUtils::HitTest_Plane(m_PlaneGeometries[i], ray, closestHit);
 		}
@@ -201,26 +201,34 @@ namespace dae {
 
 		const auto matLambert_GrayBlue = AddMaterial(new Material_Lambert({ .49f, .57f, .57f }, 1.f));
 
-		////Spheres
-		//AddSphere({ -1.75f, 1.f, 0.f }, .75f, matCT_GrayRoughMetal);
-		//AddSphere({ 0.f, 1.f, 0.f }, .75f, matCT_GrayMediumMetal);
-		//AddSphere({ 1.75f, 1.f, 0.f }, .75f, matCT_GraySmoothMetal);
-		//AddSphere({ -1.75f, 3.f, 0.f }, .75f, matCT_GrayRoughPlastic);
-		//AddSphere({ 0.f, 3.f, 0.f }, .75f, matCT_GrayMediumPlastic);
-		//AddSphere({ 1.75f, 3.f, 0.f }, .75f, matCT_GraySmoothPlastic);
+		//Lambert-Phong Spheres & Materials
+		//const auto matLambertPhong1 = AddMaterial(new Material_LambertPhong(colors::Blue, 0.5f, 0.5f, 3.f));
+		//const auto matLambertPhong2 = AddMaterial(new Material_LambertPhong(colors::Blue, 0.5f, 0.5f, 15.f));
+		//const auto matLambertPhong3 = AddMaterial(new Material_LambertPhong(colors::Blue, 0.5f, 0.5f, 50.f));
 		//
-		////Plane
-		//AddPlane({ -5.f, 0.f, 0.f }, { 1.f, 0.f,0.f }, matLambert_GrayBlue);	//LEFT
-		//AddPlane({ 5.f, 0.f, 0.f }, { -1.f, 0.f,0.f }, matLambert_GrayBlue);	//RIGHT
-		//AddPlane({ 0.f, 0.f, 0.f }, { 0.f, 1.f,0.f }, matLambert_GrayBlue);		//BOTTOM
-		//AddPlane({ 0.f, 10.f, 0.f }, { 0.f, -1.f,0.f }, matLambert_GrayBlue);	//TOP
-		//AddPlane({ 0.f, 0.f, 10.f }, { 0.f, 0.f,-1.f }, matLambert_GrayBlue);	//BACK
-		//
-		////Light
-		//AddPointLight({ 0.f, 5.f, 5.f }, 50.f, ColorRGB{1.f, .61f, .45f});		//backlight
-		//AddPointLight({ -2.5f, 5.f, -5.f }, 70.f, ColorRGB{1.f, .8f, .45f});	//front light left
-		//AddPointLight({ 2.5f, 2.5f, -5.f }, 50.f, ColorRGB{.34f, .47f, .68f});	
+		//AddSphere(Vector3{ -1.75f, 1.f, 0.f }, .75f, matLambertPhong1);
+		//AddSphere(Vector3{ 0.f, 1.f, 0.f }, .75f, matLambertPhong2);
+		//AddSphere(Vector3{ 1.75f, 1.f, 0.f }, .75f, matLambertPhong3);
 
+		//Spheres
+		AddSphere(Vector3{ -1.75f, 1.f, 0.f }, .75f, matCT_GrayRoughMetal);
+		AddSphere(Vector3{ 0.f, 1.f, 0.f }, .75f, matCT_GrayMediumMetal);
+		AddSphere(Vector3{ 1.75f, 1.f, 0.f }, .75f, matCT_GraySmoothMetal);
+		AddSphere(Vector3{ -1.75f, 3.f, 0.f }, .75f, matCT_GrayRoughPlastic);
+		AddSphere(Vector3{ 0.f, 3.f, 0.f }, .75f, matCT_GrayMediumPlastic);
+		AddSphere(Vector3{ 1.75f, 3.f, 0.f }, .75f, matCT_GraySmoothPlastic);
+		
+		//Plane
+		AddPlane(Vector3{ -5.f, 0.f, 0.f }, Vector3{ 1.f, 0.f,0.f }, matLambert_GrayBlue);	//LEFT
+		AddPlane(Vector3{ 5.f, 0.f, 0.f }, Vector3{ -1.f, 0.f,0.f }, matLambert_GrayBlue);	//RIGHT
+		AddPlane(Vector3{ 0.f, 0.f, 0.f }, Vector3{ 0.f, 1.f,0.f }, matLambert_GrayBlue);	//BOTTOM
+		AddPlane(Vector3{ 0.f, 10.f, 0.f }, Vector3{ 0.f, -1.f,0.f }, matLambert_GrayBlue);	//TOP
+		AddPlane(Vector3{ 0.f, 0.f, 10.f }, Vector3{ 0.f, 0.f,-1.f }, matLambert_GrayBlue);	//BACK
+		
+		//Light
+		AddPointLight(Vector3{ 0.f, 5.f, 5.f }, 50.f, ColorRGB{1.f, .61f, .45f});		//backlight
+		AddPointLight(Vector3{ -2.5f, 5.f, -5.f }, 70.f, ColorRGB{1.f, .8f, .45f});	//front light left
+		AddPointLight(Vector3{ 2.5f, 2.5f, -5.f }, 50.f, ColorRGB{.34f, .47f, .68f});
 	}
 #pragma endregion
 }

@@ -14,14 +14,14 @@ namespace dae
 		{
 			////todo: W3
 			//throw std::runtime_error("Not Implemented Yet");
-			return {};
+			return (cd * kd)/PI;
 		}
 
 		static ColorRGB Lambert(const ColorRGB& kd, const ColorRGB& cd)
 		{
 			////todo: W3
 			//throw std::runtime_error("Not Implemented Yet");
-			return {};
+			return (cd * kd) / PI;
 		}
 
 		/**
@@ -37,7 +37,15 @@ namespace dae
 		{
 			////todo: W3
 			//throw std::runtime_error("Not Implemented Yet");
-			return {};
+
+			Vector3 r = l - 2.0f * Vector3::Dot(n, l) * n;
+
+			float cos{ Vector3::Dot(r, v) };
+			float specularRef{};
+			if (cos > 0) {
+				specularRef = (ks * std::powf((cos), exp));
+			}
+			return ColorRGB{ 1,1,1 } * specularRef;
 		}
 
 		/**
@@ -51,7 +59,7 @@ namespace dae
 		{
 			////todo: W3
 			//throw std::runtime_error("Not Implemented Yet");
-			return {};
+			return f0 +  (ColorRGB{1.f, 1.f, 1.f} - f0) * powf(1 - Vector3::Dot(h, v), 5);
 		}
 
 		/**
@@ -65,7 +73,7 @@ namespace dae
 		{
 			////todo: W3
 			//throw std::runtime_error("Not Implemented Yet");
-			return {};
+			return Square(Square(roughness)) / (PI * Square(Square(Vector3::Dot(n,h)) * (Square(Square(roughness)) - 1) + 1));
 		}
 
 
@@ -80,7 +88,9 @@ namespace dae
 		{
 			////todo: W3
 			//throw std::runtime_error("Not Implemented Yet");
-			return {};
+
+			float k{ Square(Square(roughness) + 1) / 8 };
+			return Vector3::Dot(v, n) / (Vector3::Dot(n,v) * ( 1 - k) + k);
 		}
 
 		/**
@@ -95,7 +105,9 @@ namespace dae
 		{
 			////todo: W3
 			//throw std::runtime_error("Not Implemented Yet");
-			return {};
+			float k{ Square(Square(roughness) + 1) / 8 };
+
+			return GeometryFunction_SchlickGGX(n, v, k) * GeometryFunction_SchlickGGX(n, l, k);
 		}
 
 	}

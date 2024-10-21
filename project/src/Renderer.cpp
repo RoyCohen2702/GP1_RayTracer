@@ -86,28 +86,49 @@ void Renderer::Render(Scene* pScene) const
 			// 
 			//Sphere testSphere{ {0.f, 0.f, 100.f}, 50.f, 0 };
 			//GeometryUtils::HitTest_Sphere(testSphere, viewRay, closestHit);
-			
+
 			if (closestHit.didHit) {
-
-				finalColor = materials[closestHit.materialIndex]->Shade();
-
+				//finalColor = materials[closestHit.materialIndex]->Shade();
 
 				for (uint16_t i{}; i < lights.size(); ++i) {
 
-					const Vector3 lightDirection{ LightUtils::GetDirectionToLight(lights[i], closestHit.origin) };
+					Vector3 lightDirection{ LightUtils::GetDirectionToLight(lights[i], closestHit.origin) };
+					Ray lightRay{};
 
-					Ray lightRay{
-						closestHit.origin + (closestHit.normal * 0.0001f),
-						lightDirection.Normalized(),
-						0.00001f,
-						lightDirection.Magnitude()
-					};
+					lightRay.origin = closestHit.origin + (closestHit.normal * 0.0001f);
+					lightRay.direction = lightDirection.Normalized();
+					lightRay.min = 0.00001f;
+					lightRay.max = lightDirection.Normalize();
 
-					if (pScene->DoesHit(lightRay)) {
-						finalColor *= 0.5f;
+					if (m_ShadowsEnabled)
+					{
+						if (pScene->DoesHit(lightRay)) {
+							//	finalColor *= 0.5f;
+							continue;
+						}
+					}
+
+					float observedArea{ std::max(0.0f,Vector3::Dot(lightDirection.Normalized(), closestHit.normal)) };
+					ColorRGB radiance{ LightUtils::GetRadiance(lights[i], closestHit.origin) };
+
+					switch (m_LightingMode)
+					{
+					case dae::Renderer::LightingMode::ObservedArea:
+						finalColor += ColorRGB{ 1.f, 1.f, 1.f } *observedArea;
+						break;
+					case dae::Renderer::LightingMode::Radiance:
+						finalColor += radiance;
+						break;
+					case dae::Renderer::LightingMode::BRDF:
+						finalColor += materials[closestHit.materialIndex]->Shade(closestHit, lightDirection, -rayDirection);
+						break;
+					case dae::Renderer::LightingMode::Combined:
+						finalColor += radiance  * materials[closestHit.materialIndex]->Shade(closestHit, lightDirection, -rayDirection) * observedArea;
+						break;
+					default:
+						break;
 					}
 				}
-
 
 				// TEST: Test to see if the t_values are correct
 				// 
@@ -132,4 +153,36 @@ void Renderer::Render(Scene* pScene) const
 bool Renderer::SaveBufferToImage() const
 {
 	return SDL_SaveBMP(m_pBuffer, "RayTracing_Buffer.bmp");
+}
+
+void dae::Renderer::CycleLightingMode()
+{
+	const int max{ 3 };
+	const int reset{ 0 };
+
+	if (static_cast<int>(m_LightingMode) < max)
+	{
+		m_LightingMode = static_cast<LightingMode>(static_cast<int>(m_LightingMode) + 1);
+	}
+	else {
+		m_LightingMode = static_cast<LightingMode>(reset);
+	}
+
+	switch (m_LightingMode)
+	{
+	case dae::Renderer::LightingMode::ObservedArea:
+		std::cout << "ObservedArea" << std::endl;
+		break;
+	case dae::Renderer::LightingMode::Radiance:
+		std::cout << "Radiance" << std::endl;
+		break;
+	case dae::Renderer::LightingMode::BRDF:
+		std::cout << "BRDF" << std::endl;
+		break;
+	case dae::Renderer::LightingMode::Combined:
+		std::cout << "Combined" << std::endl;
+		break;
+	default:
+		break;
+	}
 }
