@@ -88,9 +88,34 @@ namespace dae
 		//TRIANGLE HIT-TESTS
 		inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 		{
-			//todo W5
-			throw std::runtime_error("Not Implemented Yet");
-			return false;
+			////todo W5
+			//throw std::runtime_error("Not Implemented Yet");
+			//return false;
+
+			const Vector3 a{ triangle.v1 - triangle.v0 };
+			const Vector3 b{ triangle.v2 - triangle.v0 };
+
+			const Vector3 n{ Vector3::Cross(a,b) };
+
+			if (Vector3::Dot(n, ray.direction) == 0.f)
+			{
+				return false;
+			}
+			
+			const Vector3 L{triangle.v0 - ray.origin};
+			const float t{ Vector3::Dot(L, n) / Vector3::Dot(ray.direction, n) };
+
+			if (t < ray.min && t > ray.max) {
+				return false;
+			}
+
+			Vector3 P{ ray.origin + ray.direction * t };
+
+			Vector3 vertices[] = {triangle.v0, triangle.v1, triangle.v2};
+			for(uint16_t i{}; i < vertices )
+			{
+
+			}
 		}
 
 		inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray)

@@ -37,10 +37,10 @@ void Renderer::Render(Scene* pScene) const
 	// calculate FOV with radians NOT ANGLE
 	const float FOV{ tan(radFOV / 2) };
 
+	const float aspectRatio{ float(m_Width) / float(m_Height) };
+
 	for (int px{}; px < m_Width; ++px)
 	{
-		const float aspectRatio{ float(m_Width) / float(m_Height) };
-		
 		for (int py{}; py < m_Height; ++py)
 		{
 			//BLACK GRADIENT BACKGROUND
@@ -90,9 +90,9 @@ void Renderer::Render(Scene* pScene) const
 			if (closestHit.didHit) {
 				//finalColor = materials[closestHit.materialIndex]->Shade();
 
-				for (uint16_t i{}; i < lights.size(); ++i) {
+				for (auto& light : lights) {
 
-					Vector3 lightDirection{ LightUtils::GetDirectionToLight(lights[i], closestHit.origin) };
+					Vector3 lightDirection{ LightUtils::GetDirectionToLight(light, closestHit.origin) };
 					Ray lightRay{};
 
 					lightRay.origin = closestHit.origin + (closestHit.normal * 0.0001f);
@@ -106,13 +106,13 @@ void Renderer::Render(Scene* pScene) const
 					}
 
 					const float observedArea{ std::max(0.0f,Vector3::Dot(lightDirection.Normalized(), closestHit.normal)) };
-					const ColorRGB radiance{ LightUtils::GetRadiance(lights[i], closestHit.origin) };
+					const ColorRGB radiance{ LightUtils::GetRadiance(light, closestHit.origin) };
 					const ColorRGB shade{ materials[closestHit.materialIndex]->Shade(closestHit, lightDirection, -rayDirection) };
 
 					switch (m_LightingMode)
 					{
 					case dae::Renderer::LightingMode::ObservedArea:
-						finalColor += ColorRGB{ 1.f, 1.f, 1.f } * observedArea;
+						finalColor += colors::White * observedArea;
 						break;
 					case dae::Renderer::LightingMode::Radiance:
 						finalColor += radiance;

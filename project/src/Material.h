@@ -127,7 +127,7 @@ namespace dae
 			const float G{ BRDF::GeometryFunction_Smith(hitRecord.normal, v, l, m_Roughness) };
 
 			if (m_Metalness == 0.f) {
-				kd = ColorRGB{ 1.f, 1.f, 1.f } - F;
+				kd = colors::White - F;
 			}
 
 			const ColorRGB specular{ (D * F * G) / (4 * (Vector3::Dot(v, hitRecord.normal) * Vector3::Dot(l, hitRecord.normal))) };

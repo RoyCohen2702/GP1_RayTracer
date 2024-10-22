@@ -45,7 +45,7 @@ namespace dae
 			if (cos > 0) {
 				specularRef = (ks * std::powf((cos), exp));
 			}
-			return ColorRGB{ 1,1,1 } * specularRef;
+			return colors::White * specularRef;
 		}
 
 		/**
@@ -59,7 +59,7 @@ namespace dae
 		{
 			////todo: W3
 			//throw std::runtime_error("Not Implemented Yet");
-			return f0 +  (ColorRGB{1.f, 1.f, 1.f} - f0) * powf(1 - Vector3::Dot(h, v), 5);
+			return f0 +  (colors::White - f0) * powf(1 - Vector3::Dot(h, v), 5);
 		}
 
 		/**
