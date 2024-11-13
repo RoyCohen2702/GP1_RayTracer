@@ -108,10 +108,10 @@ namespace dae {
 		//return {};
 
 		Matrix translation{
-			Vector3{1,0,0},
-			Vector3{0,1,0}, 
-			Vector3{0,0,1},
-			Vector3{x,y,z}
+			Vector4{	1,	0,	0,	0	},
+			Vector4{	0,	1,	0,	0	}, 
+			Vector4{	0,	0,	1,	0	},
+			Vector4{	x,	y,	z,	1	}
 		};
 
 		return translation;
@@ -129,10 +129,10 @@ namespace dae {
 		//return {};
 
 		Matrix rotationX{
-			Vector3{1,0,0},
-			Vector3{0,cos(pitch),sin(pitch)},
-			Vector3{0,-sin(pitch),cos(pitch)},
-			Vector3{0,0,0}
+			Vector4{1,0,0,0},
+			Vector4{0,cos(pitch),sin(pitch),0},
+			Vector4{0,-sin(pitch),cos(pitch),0},
+			Vector4{0,0,0,1}
 		};
 
 		return rotationX;
@@ -145,10 +145,10 @@ namespace dae {
 		//return {};
 
 		Matrix rotationY{
-			Vector3{cos(yaw),0,-sin(yaw)},
-			Vector3{0,1,0},
-			Vector3{sin(yaw),0,cos(yaw)},
-			Vector3{0,0,0}
+			Vector4{cos(yaw),0,-sin(yaw), 0},
+			Vector4{0,1,0,0},
+			Vector4{sin(yaw),0,cos(yaw),0},
+			Vector4{0,0,0,1}
 		};
 
 		return rotationY;
@@ -162,10 +162,10 @@ namespace dae {
 		//return {};
 
 		Matrix rotationZ{
-			Vector3{cos(roll),sin(roll),0},
-			Vector3{-sin(roll),cos(roll),0},
-			Vector3{0,0,1},
-			Vector3{0,0,0}
+			Vector4{cos(roll),sin(roll),0, 0},
+			Vector4{-sin(roll),cos(roll),0, 0},
+			Vector4{0,0,1, 0},
+			Vector4{0,0,0, 1}
 		};
 
 		return rotationZ;
@@ -177,20 +177,33 @@ namespace dae {
 		//throw std::runtime_error("Not Implemented Yet");
 		//return {};
 
+		float cosX = cos(r[0]); // Pitch
+		float sinX = sin(r[0]);
+		float cosY = cos(r[1]); // Yaw
+		float sinY = sin(r[1]);
+		float cosZ = cos(r[2]); // Roll
+		float sinZ = sin(r[2]);
+
 		Matrix rotation{
-			Vector3{
-				cos(r[1]) * cos(r[0]), 
-				cos(r[1])*sin(r[0])*sin(r[2]) - sin(r[1]) * cos(r[2]), 
-				cos(r[1])*sin(r[0])*cos(r[2] + sin(r[1]) * sin(r[2]))},
-			Vector3{
-				sin(r[1]) * cos(r[0]),
-				sin(r[1]) * sin(r[0]) * sin(r[2]) + cos(r[1]) * cos(r[2]),
-				sin(r[1]) * sin(r[0]) * cos(r[2] - cos(r[1]) * sin(r[2]))},
-			Vector3{
-				-sin(r[0]), 
-				cos(r[0]) * sin(r[2]),
-				cos(r[0]) * cos(r[2])},
-			Vector3{0, 0, 0}
+			Vector4{
+				cosY * cosZ,
+				cosY * sinZ,
+				-sinY,
+				0
+			},
+			Vector4{
+				sinX * sinY * cosZ - cosX * sinZ,
+				sinX * sinY * sinZ + cosX * cosZ,
+				sinX * cosY,
+				0
+			},
+			Vector4{
+				cosX * sinY * cosZ + sinX * sinZ,
+				cosX * sinY * sinZ - sinX * cosZ,
+				cosX * cosY,
+				0
+			},
+			Vector4{0, 0, 0, 1} // Homogeneous coordinate row
 		};
 
 		return rotation;
@@ -208,10 +221,10 @@ namespace dae {
 		//return {};
 
 		Matrix scale{
-			Vector3{sx,0,0},
-			Vector3{0,sy,0},
-			Vector3{0,0,sz},
-			Vector3{0,0,0}
+			Vector4{sx,0,0, 0},
+			Vector4{0,sy,0,0},
+			Vector4{0,0,sz,0},
+			Vector4{0,0,0,1}
 		};
 
 		return scale;

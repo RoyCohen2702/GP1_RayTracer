@@ -12,13 +12,12 @@ namespace dae
 		Camera() = default;
 
 		Camera(const Vector3& _origin, float _fovAngle) :
-			origin{ _origin },
+			origin{ origin },
 			fovAngle{ _fovAngle }
 		{
 		}
 
-
-		Vector3 origin{};
+		Vector3 origin{ };
 		float fovAngle{ 90.f };
 		
 		//Vector3 forward{ 0.266f, -0.453f, 0.860f };
