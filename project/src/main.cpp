@@ -35,7 +35,7 @@ int main(int argc, char* args[])
 	const uint32_t height = 480;
 
 	SDL_Window* pWindow = SDL_CreateWindow(
-		"RayTracer - **Insert Name**",
+		"RayTracer - Cohen Roy 2DAE20",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		width, height, 0);
@@ -50,10 +50,10 @@ int main(int argc, char* args[])
 	//const auto pScene = new Scene_W1();
 	//const auto pScene = new Scene_W2();
 	//const auto pScene = new Scene_W3();
-	const auto pScene = new Scene_W4();
+	//const auto pScene = new Scene_W4();
 
 	// Uncomment/comment to test reference scene
-	//const auto pScene = new Scene_W4_ReferenceScene();
+	const auto pScene = new Scene_W4_ReferenceScene();
 
 	// Uncomment/comment to test bunny scene
 	// const auto pScene = new Scene_W4_BunnyScene();

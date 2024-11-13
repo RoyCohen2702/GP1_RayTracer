@@ -314,6 +314,7 @@ namespace dae {
 		Scene::Update(pTimer);
 
 		pMesh->RotateY(PI_DIV_2 * pTimer->GetTotal());
+		pMesh->UpdateAABB();
 		pMesh->UpdateTransforms();
 	}
 #pragma endregion
@@ -384,6 +385,7 @@ namespace dae {
 		for (const auto& pMesh : m_Meshes)
 		{
 			pMesh->RotateY(yawAngle);
+			pMesh->UpdateAABB();
 			pMesh->UpdateTransforms();
 		}
 	}
@@ -416,6 +418,7 @@ namespace dae {
 
 		pMesh->Scale({ 2.f, 2.f, 2.f });
 
+		pMesh->UpdateAABB();
 		pMesh->UpdateTransforms();
 
 		//Light

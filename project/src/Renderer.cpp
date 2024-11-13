@@ -27,7 +27,7 @@ Renderer::Renderer(SDL_Window * pWindow) :
 void Renderer::Render(Scene* pScene) const
 {
 	Camera& camera  = pScene->GetCamera();
-	const Matrix cameraToWorld = camera.CalculateCameraToWorld();
+	const Matrix& cameraToWorld = camera.CalculateCameraToWorld();
 
 	// Convert angle to radians
 	const float radFOV{ camera.fovAngle * PI / 180.f };
@@ -64,7 +64,7 @@ void Renderer::Render(Scene* pScene) const
 	SDL_UpdateWindowSurface(m_pWindow);
 }
 
-void Renderer::RenderPixel(Scene* pScene, uint32_t pixelIndex, float fov, float aspectRatio, const Matrix cameraToWorld, const Vector3 cameraOrigin) const
+void Renderer::RenderPixel(Scene* pScene, uint32_t pixelIndex, float fov, float aspectRatio, const Matrix& cameraToWorld, const Vector3& cameraOrigin) const
 {
 	auto& materials{ pScene->GetMaterials() };
 	auto& lights{ pScene->GetLights() };
