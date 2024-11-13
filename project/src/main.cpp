@@ -50,13 +50,13 @@ int main(int argc, char* args[])
 	//const auto pScene = new Scene_W1();
 	//const auto pScene = new Scene_W2();
 	//const auto pScene = new Scene_W3();
-	//const auto pScene = new Scene_W4();
+	const auto pScene = new Scene_W4();
 
 	// Uncomment/comment to test reference scene
 	//const auto pScene = new Scene_W4_ReferenceScene();
 
 	// Uncomment/comment to test bunny scene
-	const auto pScene = new Scene_W4_BunnyScene();
+	// const auto pScene = new Scene_W4_BunnyScene();
 	pScene->Initialize();
 
 	//Start loop
